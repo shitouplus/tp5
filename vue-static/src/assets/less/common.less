@@ -1,5 +1,5 @@
-@theme-link-color: '#409EFF';
-@theme-primary-color: '#303133';
+@theme-link-color: #409EFF;
+@theme-primary-color: #606266;
 
 body {
   margin: 0;
@@ -32,5 +32,9 @@ a {
 }
 
 .el-button--text {
-  color: inherit;
+  color: @theme-primary-color;
+}
+
+.el-pagination {
+  color: @theme-primary-color;
 }
