@@ -279,6 +279,7 @@
   .index__sidebar {
     float: right;
     width: 270px;
+    margin-right: 20px;
     background: #fff;
   }
 
