@@ -27,33 +27,37 @@
       class="app-header__form-dialog"
       width="300px">
         <div class="app-header__login-box" v-if="dialogType === 'register'">
-          <el-form ref="registerForm" :model="registerForm">
-            <el-form-item prop="name">
+          <el-form ref="registerForm">
+            <el-form-item>
               <el-input v-model.trim="registerForm.name" placeholder="请输入用户名" size="small"></el-input>
             </el-form-item>
-            <el-form-item prop="password">
+            <el-form-item>
               <el-input v-model.trim="registerForm.password" placeholder="请输入密码" size="small"></el-input>
             </el-form-item>
-            <el-form-item prop="email">
+            <el-form-item>
               <el-input v-model.trim="registerForm.email" placeholder="请输入邮箱" size="small"></el-input>
             </el-form-item>
-            <el-form-item prop="verify">
+            <el-form-item>
               <el-input v-model="registerForm.verify" size="small"></el-input>
               <el-input v-model.trim="registerForm.verify" placeholder="请输入上图中的验证码" size="small"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" size="small" class="app-header__form-submit">注册</el-button>
+              <el-button type="primary" size="small" class="app-header__form-submit" @click="handleRegister">注册</el-button>
               <el-button type="text" size="mini" class="float-right" @click="dialogType = 'login'">已有账号登录</el-button>
             </el-form-item>
           </el-form>
         </div>
         <div class="app-header__register-box" v-if="dialogType === 'login'">
-          <el-form ref="loginForm" :model="loginForm">
-            <el-form-item prop="name">
+          <el-form ref="loginForm">
+            <el-form-item>
               <el-input v-model.trim="loginForm.name" placeholder="请输入用户名" size="small"></el-input>
             </el-form-item>
-            <el-form-item prop="password">
+            <el-form-item>
               <el-input v-model.trim="loginForm.password" placeholder="请输入密码" size="small"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="loginForm.verify" size="small"></el-input>
+              <el-input v-model.trim="loginForm.verify" placeholder="请输入上图中的验证码" size="small"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" size="small" class="app-header__form-submit">登录</el-button>
@@ -82,7 +86,18 @@
           verify: ''
         },
         loginForm: {
-
+          name: '',
+          password: '',
+          verify: ''
+        },
+        rules: {
+          name: [{pattern: /\S+/, message: '请输入用户名'}],
+          password: [{pattern: /\S+/, message: '请输入密码'}],
+          email: [
+            {pattern: /\S+/, message: '请输入邮箱'},
+            {pattern: /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/, message: '邮箱格式错误'}
+          ],
+          verify: [{pattern: /\S+/, message: '请输入验证码'}]
         }
       }
     },
@@ -100,6 +115,25 @@
       dialogTitle() {
         const TITLE_MAP = {register: '注册', login: '登录'};
         return TITLE_MAP[this.dialogType];
+      }
+    },
+    methods: {
+      validateForm(form) {
+        for (let field of Object.keys(form)) {
+          const val = form[field];
+          const fieldRules = this.rules[field];
+          for (let rule of fieldRules) {
+            if (!rule.pattern.test(val)) {
+              return this.$message.warning(rule.message);
+            }
+          }
+        }
+        return true;
+      },
+      handleRegister() {
+        const validation = this.validateForm(this.registerForm);
+        if (validation) {
+        }
       }
     }
   }
